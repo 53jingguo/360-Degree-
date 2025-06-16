@@ -18,7 +18,7 @@ parser.add_argument("--dataset", default="stanford2d3d", choices=["3d60", "panos
                     type=str, help="dataset to evaluate on.")
 parser.add_argument("--height", type=int, default=512, help="batch size")
 parser.add_argument("--width", type=int, default=1024, help="batch size")
-parser.add_argument("--load_weights_dir",default='G:\liujingguo\\five\YUHAN', type=str, help="folder of model to load")
+parser.add_argument("--load_weights_dir",default='G:', type=str, help="folder of model to load")
 
 parser.add_argument("--num_workers", type=int, default=0, help="number of dataloader workers")
 parser.add_argument("--batch_size", type=int, default=1, help="batch size")
@@ -46,9 +46,7 @@ def main():
     print(model_dict['miou'])
     # data
     datasets_dict = {"stanford2d3d": datasets.S2d3dSemgDataset,
-                     "matterport3d": datasets.Matterport3D,
-                     "struct3d": datasets.Struct3D,
-                     "OmniMNIST": datasets.OmniMNIST}  ##s2d3d segmentation             mattort3d and 3d60 depth estimation
+                     "OmniMNIST": datasets.OmniMNIST}  ##s2d3d segmentation 
     dataset = datasets_dict[settings.dataset]
     # ################################STANFORD2D3D
     test_dataset = dataset(settings.root, depth=False,
@@ -56,7 +54,7 @@ def main():
     test_loader = DataLoader(test_dataset, settings.batch_size, False,
                                  num_workers=settings.num_workers, pin_memory=True, drop_last=False)
     invalid_ids = []
-    label_weight = torch.load('G:/liujingguo/segmentation/networks/label13_weight.pth').float().to(device)
+    label_weight = torch.load('G:/segmentation/networks/label13_weight.pth').float().to(device)
     label_weight[invalid_ids] = 0
     label_weight *= (settings.num_classes - len(invalid_ids)) / label_weight.sum()
     colors = np.load('G:/Stanford2D3D_sem/colors.npy')
@@ -80,7 +78,7 @@ def main():
     saver = Saver(load_weights_folder)
     pbar = tqdm.tqdm(test_loader)
     pbar.set_description("Testing")
-    vis_dir = ''#'G:\liujingguo\\five\\vis 512 1\\'  # G:\liujingguo\\fuse\\vis\\
+    vis_dir = ''#
     cm = 0
     with torch.no_grad():
         for batch_idx, inputs in enumerate(pbar):
